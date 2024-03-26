@@ -1,0 +1,64 @@
+services:
+
+  nginx:
+    depends_on:
+      - wordpress
+    image: nginx:42.version.1.0
+    container_name: nginx
+    env_file:
+      - .env
+    build: ./requeriments/nginx/.
+    ports:
+      - 443:443
+    networks:
+      - inceptinet
+    volumes:
+      - website:${SITE_PATH}
+    restart: always
+
+  wordpress:
+    depends_on:
+      - mariadb
+    image: wordpress:42.version.1.0
+    container_name: wordpress
+    env_file:
+      - .env
+    build: ./requeriments/wordpress/.
+    expose:
+      - 9000
+    networks:
+      - inceptinet
+    volumes:
+      - website:${SITE_PATH}
+    restart: always
+
+  mariadb:
+    image: mariadb:42.version.1.0
+    container_name: mariadb
+    env_file:
+      - .env
+    build: ./requeriments/mariadb/.
+    expose:
+      - 3306
+    networks:
+      - inceptinet
+    volumes:
+      - database:${DATABASE_PATH}
+    restart: always
+
+networks:
+  inceptinet:
+
+volumes:
+  website:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOST_SITE_PATH}
+      o: bind
+  database:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOST_DATABASE_PATH}
+      o: bind

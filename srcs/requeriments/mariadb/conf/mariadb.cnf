@@ -1,0 +1,7 @@
+[client-server]
+socket = /var/lib/mysql/mysql.sock
+[mysqld]
+datadir = /var/lib/mysql
+log_error=mariadb.err
+skip-networking = false
+bind-address = 0.0.0.0
